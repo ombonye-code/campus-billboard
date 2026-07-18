@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Connecting…</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #111113;
+      color: #f2f1ec;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <p id="msg">Connecting your Spotify account…</p>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+    const error = params.get('error');
+
+    if (window.opener) {
+      window.opener.postMessage({ type: 'spotify-auth', code, state, error }, '*');
+      document.getElementById('msg').textContent = error
+        ? 'Something went wrong — you can close this window.'
+        : 'Connected! You can close this window.';
+      setTimeout(() => window.close(), 800);
+    } else {
+      document.getElementById('msg').textContent =
+        'This page should be opened by the Campus Billboard app, not visited directly.';
+    }
+  </script>
+</body>
+</html>
